@@ -21,7 +21,15 @@ const Shape: Record<ShapeKey, ShapeValue> = {
   Z: "scissor",
 };
 
-type ShapeKey = "A" | "B" | "C" | "X" | "Y" | "Z";
+const ResultToShape: Record<MyShapeKey, keyof typeof GameScore> = {
+  X: "lose",
+  Y: "draw",
+  Z: "win",
+};
+
+type TheirShapeKey = "A" | "B" | "C";
+type MyShapeKey = "X" | "Y" | "Z";
+type ShapeKey = TheirShapeKey | MyShapeKey;
 type ShapeValue = "rock" | "paper" | "scissor";
 
 function getScore(game: [ShapeValue, ShapeValue]): number {
@@ -54,19 +62,44 @@ function getScore(game: [ShapeValue, ShapeValue]): number {
     return (gameScore += GameScore["win"]);
   }
 
-  if (theirShape === "scissor" && myShape === "paper") {
-    return (gameScore += GameScore["win"]);
+  return (gameScore += GameScore["win"]);
+}
+
+function resultToShape(
+  their: ShapeValue,
+  outcome: keyof typeof GameScore
+): ShapeValue {
+  if (outcome === "draw") return their;
+
+  if (their === "rock" && outcome === "win") {
+    return "paper";
   }
 
-  return 0;
+  if (their === "rock" && outcome === "lose") {
+    return "scissor";
+  }
+
+  if (their === "paper" && outcome === "win") {
+    return "scissor";
+  }
+
+  if (their === "paper" && outcome === "lose") {
+    return "rock";
+  }
+
+  if (their === "scissor" && outcome === "win") {
+    return "rock";
+  }
+
+  return "paper";
 }
 
 const content = getInput(__dirname);
 
 /**Part 1 */
-let result = content
+const result = content
   .split("\n")
-  .map((row) => row.split(" ") as [ShapeKey, ShapeKey])
+  .map((row) => row.split(" ") as [TheirShapeKey, MyShapeKey])
   .map(
     (round) => round.map((shape) => Shape[shape]) as [ShapeValue, ShapeValue]
   )
@@ -74,3 +107,16 @@ let result = content
   .reduce((prev, acc) => prev + acc, 0);
 
 console.log("Part 1", result);
+
+/**Part 2 */
+const result2 = content
+  .split("\n")
+  .map((row) => row.split(" ") as [TheirShapeKey, MyShapeKey])
+  .map((shape) => {
+    const [their, outcome] = [Shape[shape[0]], ResultToShape[shape[1]]];
+    return [their, resultToShape(their, outcome)] as [ShapeValue, ShapeValue];
+  })
+  .map((game) => getScore(game))
+  .reduce((prev, acc) => prev + acc, 0);
+
+console.log(result2);
