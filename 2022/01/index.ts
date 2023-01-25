@@ -10,7 +10,7 @@ const content = getInput(__dirname)
   )
   .sort((a, b) => b - a);
 
-let result;
+let result: number;
 
 /**Part 1 */
 result = content[0];
