@@ -13,9 +13,9 @@ function getId(start: number, end: number): number[] {
 
 function isOverlap(a: number[], b: number[]): boolean {
   return (
-    a.map((section) => b.includes(section)).filter(Boolean).length >=
+    a.map((section) => b.includes(section)).filter(Boolean).length ===
       Math.min(a.length, b.length) &&
-    b.map((section) => a.includes(section)).filter(Boolean).length >=
+    b.map((section) => a.includes(section)).filter(Boolean).length ===
       Math.min(a.length, b.length)
   );
 }
