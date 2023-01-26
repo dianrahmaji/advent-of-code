@@ -24,8 +24,6 @@ function calculateRibbon(dimension: number[]): number {
 
   const bow = dimension.reduce((prev, acc) => prev * acc);
 
-  console.log({ wrap, bow });
-
   return wrap + bow;
 }
 
