@@ -46,6 +46,17 @@ function rearrange(stacks: string[][], rearrangements: number[][]): string[][] {
   return stacks;
 }
 
+function rearrange2(stacks: string[][], rearrangements: number[][]) {
+  for (let i = 0; i < rearrangements.length; i++) {
+    const [move, from, to] = rearrangements[i];
+
+    const removed = stacks[from - 1].splice(-move);
+    stacks[to - 1] = stacks[to - 1].concat(removed);
+  }
+
+  return stacks;
+}
+
 function getStackTops(stacks: string[][]): string {
   let tops = "";
   for (let i = 0; i < stacks.length; i++) {
@@ -63,7 +74,13 @@ const stacks = createStack(cargo);
 const rearrangements = createRearrangement(procedures);
 
 /**Part 1 */
-const rearrangedStacks = rearrange(stacks, rearrangements);
+// const rearrangedStacks = rearrange(stacks, rearrangements);
+// const tops = getStackTops(rearrangedStacks);
+
+// console.log("Part 1", tops);
+
+/**Part 2 */
+const rearrangedStacks = rearrange2(stacks, rearrangements);
 const tops = getStackTops(rearrangedStacks);
 
-console.log("Part 1", tops);
+console.log(tops);
