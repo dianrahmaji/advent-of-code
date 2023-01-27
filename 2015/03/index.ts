@@ -4,46 +4,54 @@ const content = getInput(__dirname);
 
 class Delivery {
   private path: string;
+  private _locations = [[0, 0]];
   unique: number = 1;
 
-  constructor(private locations = [[0, 0]], path: string) {
+  constructor(path: string) {
     this.path = path;
   }
 
   get length(): number {
-    return this.locations.length;
+    return this._locations.length;
+  }
+
+  get locations(): number[][] {
+    return this._locations;
   }
 
   private isVisited(next: number[]) {
     const [nextX, nextY] = next;
-    return this.locations.some(
+    return this._locations.some(
       ([currentX, currentY]) => currentX === nextX && currentY === nextY
     );
   }
 
   private up() {
-    const [currentX, currentY] = this.locations[this.length - 1];
+    const [currentX, currentY] = this._locations[this.length - 1];
     const next = [currentX, currentY + 1];
     if (!this.isVisited(next)) this.unique++;
-    this.locations.push(next);
+    this._locations.push(next);
   }
+
   private right() {
-    const [currentX, currentY] = this.locations[this.length - 1];
+    const [currentX, currentY] = this._locations[this.length - 1];
     const next = [currentX + 1, currentY];
     if (!this.isVisited(next)) this.unique++;
-    this.locations.push(next);
+    this._locations.push(next);
   }
+
   private down() {
-    const [currentX, currentY] = this.locations[this.length - 1];
+    const [currentX, currentY] = this._locations[this.length - 1];
     const next = [currentX, currentY - 1];
     if (!this.isVisited(next)) this.unique++;
-    this.locations.push(next);
+    this._locations.push(next);
   }
+
   private left() {
-    const [currentX, currentY] = this.locations[this.length - 1];
+    const [currentX, currentY] = this._locations[this.length - 1];
     const next = [currentX - 1, currentY];
     if (!this.isVisited(next)) this.unique++;
-    this.locations.push(next);
+    this._locations.push(next);
   }
 
   move() {
@@ -58,12 +66,39 @@ class Delivery {
         this.left();
       }
     });
-
-    return this;
   }
 }
 
+/**Part 1 */
 const delivery = content
   .split("\n")
-  .map((path) => new Delivery([[0, 0]], path).move())
+  .map((path) => {
+    const d = new Delivery(path);
+    d.move();
+    return d;
+  })
   .map((d) => console.log(d.unique));
+
+/**Part 2 */
+let santaPath = "";
+let roboPath = "";
+
+content.split("").forEach((v, i) => {
+  if (i % 2 === 0) {
+    santaPath += v;
+  } else roboPath += v;
+});
+
+const santaDelivery = new Delivery(santaPath);
+santaDelivery.move();
+const roboDelivery = new Delivery(roboPath);
+roboDelivery.move();
+
+const removeDuplicated = [
+  ...santaDelivery.locations,
+  ...roboDelivery.locations,
+].map((v) => JSON.stringify(v));
+
+const result2 = [...new Set(removeDuplicated)].length;
+
+console.log(result2);
