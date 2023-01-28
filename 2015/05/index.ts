@@ -28,7 +28,7 @@ function hasDoubleCharInARow(input: string): boolean {
   return false;
 }
 
-function hasDissalowedContent(input: string): boolean {
+function hasDisallowedContent(input: string): boolean {
   for (let i = 1; i < input.length; i++) {
     if (disallowed.has(`${input[i - 1]}${input[i]}`)) return true;
   }
@@ -37,17 +37,53 @@ function hasDissalowedContent(input: string): boolean {
 }
 
 function isNiceString(input: string): boolean {
-  if (hasDissalowedContent(input)) return false;
+  if (hasDisallowedContent(input)) return false;
 
   if (hasDoubleCharInARow(input) && hasThreeVowels(input)) return true;
 
   return false;
 }
 
+function hasRepeatedPair(input: string): boolean {
+  for (let i = 0; i < input.length - 3; i++) {
+    const firstPair = `${input[i]}${input[i + 1]}`;
+
+    for (let j = i + 2; j < input.length - 1; j++) {
+      const secondPair = `${input[j]}${input[j + 1]}`;
+
+      if (firstPair === secondPair) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function hasRepeatedChar(input: string): boolean {
+  for (let i = 0; i < input.length - 2; i++) {
+    if (input[i] === input[i + 2]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isNiceString2(input: string): boolean {
+  return hasRepeatedPair(input) && hasRepeatedChar(input);
+}
+
 /** Part 1 */
-let result = content
+const result = content
   .split("\n")
   .map((s) => isNiceString(s))
   .filter(Boolean).length;
 
 console.log(result);
+
+/** Part 2 */
+const result2 = content
+  .split("\n")
+  .map((s) => isNiceString2(s))
+  .filter(Boolean).length;
+
+console.log(result2);
