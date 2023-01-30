@@ -114,3 +114,5 @@ const lights2 = adjustBrightness(instructions, lampGrid2);
 const result2 = calculateBrightness(lights2);
 
 console.log(result2);
+
+//TODO: Create utility function to createGrid
