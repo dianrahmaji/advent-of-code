@@ -32,21 +32,21 @@ function setUpLights(instructions: Instruction[], lights: boolean[][]) {
   for (const step of instructions) {
     const { instruction, from, to } = step;
 
-    const [xStart, yStart] = from;
-    const [xEnd, yEnd] = to;
+    const [rowStart, colStart] = from;
+    const [rowEnd, colEnd] = to;
 
-    for (let i = xStart; i <= xEnd; i++) {
-      for (let j = yStart; j <= yEnd; j++) {
+    for (let r = rowStart; r <= rowEnd; r++) {
+      for (let c = colStart; c <= colEnd; c++) {
         if (instruction === "on") {
-          lights[j][i] = true;
+          lights[c][r] = true;
         }
 
         if (instruction === "off") {
-          lights[j][i] = false;
+          lights[c][r] = false;
         }
 
         if (instruction === "toggle") {
-          lights[j][i] = !lights[j][i];
+          lights[c][r] = !lights[c][r];
         }
       }
     }
@@ -68,21 +68,21 @@ function adjustBrightness(
   for (const step of instructions) {
     const { instruction, from, to } = step;
 
-    const [xStart, yStart] = from;
-    const [xEnd, yEnd] = to;
+    const [rowStart, colStart] = from;
+    const [rowEnd, colEnd] = to;
 
-    for (let i = xStart; i <= xEnd; i++) {
-      for (let j = yStart; j <= yEnd; j++) {
+    for (let r = rowStart; r <= rowEnd; r++) {
+      for (let c = colStart; c <= colEnd; c++) {
         if (instruction === "on") {
-          lights[j][i]++;
+          lights[c][r]++;
         }
 
         if (instruction === "off") {
-          lights[j][i] = Math.max(0, lights[j][i] - 1);
+          lights[c][r] = Math.max(0, lights[c][r] - 1);
         }
 
         if (instruction === "toggle") {
-          lights[j][i] += 2;
+          lights[c][r] += 2;
         }
       }
     }
