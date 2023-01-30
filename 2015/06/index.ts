@@ -55,12 +55,17 @@ function setUpLights(instructions: Instruction[], grid: boolean[][]) {
   return grid;
 }
 
+function countActiveLights(lights: boolean[][]): number {
+  return lights
+    .map((r) => r.filter(Boolean).length)
+    .reduce((acc, prev) => acc + prev, 0);
+}
+
+/** Part 1 */
 const instructions = content.split("\n").map((i) => parseInstruction(i));
 const lampGrid = createGrid(999, 999, false);
 
 const lights = setUpLights(instructions, lampGrid);
-const result = lights
-  .map((r) => r.filter(Boolean).length)
-  .reduce((acc, prev) => acc + prev, 0);
+const result = countActiveLights(lights);
 
 console.log(result);
