@@ -2,6 +2,13 @@ import { getInput } from "../../utils";
 
 const content = getInput(__dirname);
 
+interface Password {
+  password: string;
+  char: string;
+  min: number;
+  max: number;
+}
+
 //TODO: Parse with RegEx
 function parsePassword(input: string) {
   const [rule, password] = input.split(": ");
@@ -16,33 +23,13 @@ function parsePassword(input: string) {
   };
 }
 
-function verifyPassword({
-  password,
-  char,
-  min,
-  max,
-}: {
-  password: string;
-  char: string;
-  min: number;
-  max: number;
-}) {
+function verifyPassword({ password, char, min, max }: Password): boolean {
   const length = [...password].filter((v) => v === char).length;
 
   return length <= max && length >= min;
 }
 
-function verifyPassword2({
-  password,
-  char,
-  min,
-  max,
-}: {
-  password: string;
-  char: string;
-  min: number;
-  max: number;
-}) {
+function verifyPassword2({ password, char, min, max }: Password): boolean {
   const isFirstMatch = password[min - 1] === char;
   const isSecondMatch = password[max - 1] === char;
 
