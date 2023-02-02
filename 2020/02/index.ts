@@ -32,11 +32,29 @@ function verifyPassword({
   return length <= max && length >= min;
 }
 
-/** Part 1 */
-const result = content
-  .split("\n")
-  .map((v) => parsePassword(v))
-  .map((p) => verifyPassword(p))
-  .filter(Boolean).length;
+function verifyPassword2({
+  password,
+  char,
+  min,
+  max,
+}: {
+  password: string;
+  char: string;
+  min: number;
+  max: number;
+}) {
+  const isFirstMatch = password[min - 1] === char;
+  const isSecondMatch = password[max - 1] === char;
 
+  return (isFirstMatch && !isSecondMatch) || (!isFirstMatch && isSecondMatch);
+}
+
+const parsed = content.split("\n").map((v) => parsePassword(v));
+
+/** Part 1 */
+const result = parsed.map((p) => verifyPassword(p)).filter(Boolean).length;
 console.log(result);
+
+/** Part 2 */
+const result2 = parsed.map((p) => verifyPassword2(p)).filter(Boolean).length;
+console.log(result2);
