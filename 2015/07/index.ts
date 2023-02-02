@@ -2,26 +2,26 @@ import { getInput } from "../../utils";
 
 const content = getInput(__dirname).split("\n");
 
+type BinaryOperator = "AND" | "OR" | "LSHIFT" | "RSHIFT";
+type UnaryOperator = "NOT";
+
 type Operation =
   | {
       left: string | number;
       right: string | number;
-      operator: BitwiseOperation;
+      operator: BinaryOperator;
     }
   | {
       right: string | number;
-      operator: BitwiseOperation;
+      operator: UnaryOperator;
     }
   | { value: string | number };
 
-type BitwiseOperation = "AND" | "OR" | "LSHIFT" | "RSHIFT" | "OR";
-
 function parseIntOrString(input: string): string | number {
-  const value = parseInt(input);
-  if (isNaN(value)) return input;
-  return value;
+  return isNaN(parseInt(input)) ? input : parseInt(input);
 }
 
+//TODO: Parse with RegEx
 function parseOperation(operation: string): Operation {
   const operationSplitted = operation.split(" ");
 
@@ -36,7 +36,7 @@ function parseOperation(operation: string): Operation {
   } else if (operationSplitted.length === 2) {
     const [operator, right] = operationSplitted;
     const operationObj: Operation = {
-      operator: operator as BitwiseOperation,
+      operator: operator as UnaryOperator,
       right: parseIntOrString(right),
     };
 
@@ -44,7 +44,7 @@ function parseOperation(operation: string): Operation {
   } else {
     const [left, operator, right] = operationSplitted;
     const operationObj: Operation = {
-      operator: operator as BitwiseOperation,
+      operator: operator as BinaryOperator,
       left: parseIntOrString(left),
       right: parseIntOrString(right),
     };
@@ -55,6 +55,7 @@ function parseOperation(operation: string): Operation {
   return parsedOperation;
 }
 
+// TODO: Parse with RegEx
 function parseCircuit(
   input: string[],
   circuitMap: Map<string, Operation>
@@ -67,11 +68,14 @@ function parseCircuit(
   }
 }
 
-function calculateOutputFromWire(wire: string | number): number {
+function calculateSignal(
+  wire: string | number,
+  cache = new Map<string, number>()
+): number {
   if (typeof wire === "number") return wire;
 
-  if (wireCache.has(wire)) {
-    return wireCache.get(wire)!;
+  if (cache.has(wire)) {
+    return cache.get(wire)!;
   }
 
   let result: number;
@@ -80,54 +84,50 @@ function calculateOutputFromWire(wire: string | number): number {
 
   if ("value" in operation) {
     if (typeof operation.value === "number") result = operation.value;
-    return calculateOutputFromWire(operation.value);
+    return calculateSignal(operation.value, cache);
   }
 
-  if ("left" in operation) {
-    switch (operation.operator) {
-      case "AND":
-        result =
-          calculateOutputFromWire(operation.left) &
-          calculateOutputFromWire(operation.right);
-        break;
-      case "OR":
-        result =
-          calculateOutputFromWire(operation.left) |
-          calculateOutputFromWire(operation.right);
-        break;
-      case "LSHIFT":
-        result =
-          calculateOutputFromWire(operation.left) <<
-          calculateOutputFromWire(operation.right);
-        break;
-      case "RSHIFT":
-        result =
-          calculateOutputFromWire(operation.left) >>
-          calculateOutputFromWire(operation.right);
-        break;
-    }
-  } else {
-    result = 65536 + ~calculateOutputFromWire(operation.right);
+  //TODO: Extract to new function
+  switch (operation.operator) {
+    case "AND":
+      result =
+        calculateSignal(operation.left, cache) &
+        calculateSignal(operation.right, cache);
+      break;
+    case "OR":
+      result =
+        calculateSignal(operation.left, cache) |
+        calculateSignal(operation.right, cache);
+      break;
+    case "LSHIFT":
+      result =
+        calculateSignal(operation.left, cache) <<
+        calculateSignal(operation.right, cache);
+      break;
+    case "RSHIFT":
+      result =
+        calculateSignal(operation.left, cache) >>
+        calculateSignal(operation.right, cache);
+      break;
+    case "NOT":
+      result = result = 65536 + ~calculateSignal(operation.right, cache);
   }
 
-  if (!wireCache.has(wire)) {
-    wireCache.set(wire, result);
+  if (!cache.has(wire)) {
+    cache.set(wire, result);
   }
 
   return result;
 }
 
 /** Part 1 */
-const wireCache = new Map<string, number>();
 const circuit = new Map<string, Operation>();
 
 parseCircuit(content, circuit);
-const result = calculateOutputFromWire("a");
+const result = calculateSignal("a");
 console.log("Part 1", result);
 
 /**Part 2 */
-wireCache.clear();
-
 circuit.set("b", { value: result });
-const result2 = calculateOutputFromWire("a");
+const result2 = calculateSignal("a");
 console.log("Part 2", result2);
