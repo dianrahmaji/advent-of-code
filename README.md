@@ -1,0 +1,1 @@
+This repository containts my attempts to solve the puzzles from [Advent of Code](adventofcode.com). My solutions, so far, are in TypeScript. The solutions maybe are not the fastest or the cleanest possible. But, I will do some optimization or refactoring in my spare time.
