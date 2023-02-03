@@ -1,8 +1,6 @@
-import { getInput } from "../../utils";
+import { getInput, getLines, parseLines } from "../../utils";
 
-const masses = getInput(__dirname)
-  .split("\n")
-  .map((v) => parseInt(v));
+const masses = parseLines(__dirname, parseInt);
 
 function calculateFuel(mass: number): number {
   return Math.floor(mass / 3) - 2;

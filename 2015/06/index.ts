@@ -1,4 +1,4 @@
-import { getInput } from "../../utils";
+import { createGrid, getInput } from "../../utils";
 
 const content = getInput(__dirname);
 
@@ -22,10 +22,6 @@ function parseInstruction(input: string): Instruction {
     from: from.split(",").map((v) => parseInt(v)),
     to: to.split(",").map((v) => parseInt(v)),
   } as Instruction;
-}
-
-function createGrid<T>(row: number, col: number, initial: T): T[][] {
-  return new Array(row).fill(0).map(() => new Array(col).fill(initial));
 }
 
 function setUpLights(instructions: Instruction[], lights: boolean[][]) {
@@ -114,5 +110,3 @@ const lights2 = adjustBrightness(instructions, lampGrid2);
 const result2 = calculateBrightness(lights2);
 
 console.log(result2);
-
-//TODO: Create utility function to createGrid
