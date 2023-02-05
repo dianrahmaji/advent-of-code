@@ -4,7 +4,10 @@ const codes = getInput(__dirname)
   .split(",")
   .map((c) => parseInt(c));
 
-function calculate(codes: number[]): number {
+function calculate(codes: number[], noun: number, verb: number): number {
+  codes[1] = noun;
+  codes[2] = verb;
+
   for (let i = 0; i < codes.length; i += 4) {
     const opcode = codes[i];
     const first = codes[i + 1];
@@ -23,6 +26,22 @@ function calculate(codes: number[]): number {
   return codes[0];
 }
 
+function findCombination(codes: number[]): number {
+  for (let i = 0; i < 100; i++) {
+    for (let j = 0; j < 100; j++) {
+      if (calculate([...codes], i, j) === 19690720) {
+        return i * 100 + j;
+      }
+    }
+  }
+
+  return 0;
+}
+
 /** Part 1 */
-const result = calculate(codes);
+const result = calculate([...codes], 12, 2);
 console.log(result);
+
+/** Part 2 */
+const result2 = findCombination(codes);
+console.log(result2);
