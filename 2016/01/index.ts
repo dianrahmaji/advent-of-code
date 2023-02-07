@@ -47,7 +47,7 @@ const result = directions.map((dir) =>
 console.log(result);
 
 /** Part 2 */
-const memory = new Map([["x0y0", true]]);
+const memory = new Set(["x0y0", true]);
 let key;
 
 const result2 = directions.map((dir) =>
@@ -63,7 +63,7 @@ const result2 = directions.map((dir) =>
           key = `x${state.position.x}y${state.position.y}`;
 
           if (memory.has(key)) state.found = true;
-          else memory.set(key, true);
+          else memory.add(key);
         }
 
         return state;
