@@ -47,7 +47,7 @@ const result = directions.map((dir) =>
 console.log(result);
 
 /** Part 2 */
-const memory = new Set(["x0y0"]);
+const memory = new Set(["x0y0", true]);
 let key;
 
 const result2 = directions.map((dir) =>
