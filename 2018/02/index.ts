@@ -35,3 +35,26 @@ const result = ids
   .reduce((acc, cur) => acc * cur, 1);
 
 console.log(result);
+
+/** Part 2 */
+for (const [i, currentId] of ids.slice(0, ids.length).entries()) {
+  for (const [j, nextId] of ids.slice(i + 1).entries()) {
+    let diff = 0;
+    let l = 0;
+    let res = "";
+
+    for (let k = 0; k < currentId.length; k++) {
+      if (currentId[k] !== nextId[k]) {
+        diff++;
+      } else {
+        res += currentId[k];
+      }
+      l++;
+    }
+
+    if (diff === 1 && l === currentId.length) {
+      console.log({ diff, l, res, c: currentId.length });
+      break;
+    }
+  }
+}
