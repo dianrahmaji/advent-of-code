@@ -26,6 +26,7 @@ const navigation = new Map<
   ["w", { L: "s", R: "n", axis: "x", offset: -1 }],
 ]);
 
+/** Part 1 */
 const result = directions.map((dir) =>
   Object.values(
     dir.reduce(
@@ -42,4 +43,38 @@ const result = directions.map((dir) =>
     ).position
   ).reduce((acc, cur) => acc + Math.abs(cur), 0)
 );
+
 console.log(result);
+
+/** Part 2 */
+const memory = new Map([["x0y0", true]]);
+let key;
+
+const result2 = directions.map((dir) =>
+  Object.values(
+    dir.reduce(
+      (state, dir) => {
+        if (state.found) return state;
+
+        state.dir = navigation.get(state.dir![dir[0]]);
+
+        for (let i = 0, j = dir[1]; i < j && !state.found; i++) {
+          state.position[state.dir!.axis] += state.dir!.offset;
+          key = `x${state.position.x}y${state.position.y}`;
+
+          if (memory.has(key)) state.found = true;
+          else memory.set(key, true);
+        }
+
+        return state;
+      },
+      {
+        dir: navigation.get("n"),
+        position: { x: 0, y: 0 },
+        found: false,
+      }
+    ).position
+  ).reduce((acc, cur) => acc + Math.abs(cur), 0)
+);
+
+console.log(result2);
