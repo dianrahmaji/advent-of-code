@@ -1,4 +1,4 @@
-import { getLines } from "../../utils";
+import { getLines, binarytoDecimal } from "../../utils";
 
 const report = getLines(__dirname);
 
@@ -27,10 +27,6 @@ function calculateRates(report: string[]): Rates {
   }
 
   return { gamma, epsilon };
-}
-
-function binarytoDecimal(binary: string): number {
-  return [...binary].reduce((acc, cur) => acc * 2 + parseInt(cur), 0);
 }
 
 function calculatePowerConsumption(rates: Rates): number {

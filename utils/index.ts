@@ -20,3 +20,7 @@ export function parseLines(__dirname: string, parser: (arg: any) => any) {
 export function createGrid<T>(row: number, col: number, initial: T): T[][] {
   return new Array(row).fill(0).map(() => new Array(col).fill(initial));
 }
+
+export function binarytoDecimal(binary: string): number {
+  return [...binary].reduce((acc, cur) => acc * 2 + parseInt(cur), 0);
+}
