@@ -53,3 +53,5 @@ for (let row = 0; row < triangles.length; row += 3) {
 }
 
 console.log(result2);
+
+/**TODO: Refactor the solution */
