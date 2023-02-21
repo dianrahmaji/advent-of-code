@@ -17,6 +17,22 @@ function isValidPassword(password: string): boolean {
   return true;
 }
 
+function isValidPassword2(password: string): boolean {
+  const splitted = password.split(" ").map((v) => [...v].sort().join(""));
+
+  for (let i = 0; i < splitted.length - 1; i++) {
+    for (let j = i + 1; j < splitted.length; j++) {
+      if (splitted[i] === splitted[j]) return false;
+    }
+  }
+
+  return true;
+}
+
 /** Part 1 */
-const result = passwords.filter(isValidPassword).length;
+let result = passwords.filter(isValidPassword).length;
+console.log(result);
+
+/** Part 2 */
+result = passwords.filter(isValidPassword2).length;
 console.log(result);
