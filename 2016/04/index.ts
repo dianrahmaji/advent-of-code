@@ -33,6 +33,21 @@ function isValidRoom(room: {
   return checksum === cs.slice(0, 5);
 }
 
+function decrypt({ name, sector }: { name: string[]; sector: number }) {
+  return {
+    name: name
+      .map((n) =>
+        [...n]
+          .map((c) =>
+            String.fromCharCode(((c.charCodeAt(0) - 96 + sector) % 26) + 96)
+          )
+          .join("")
+      )
+      .join(" "),
+    sector,
+  };
+}
+
 /** Part 1 */
 let result = rooms
   .map((r) => ({
@@ -44,4 +59,15 @@ let result = rooms
   .filter(isValidRoom)
   .reduce((acc, cur) => acc + cur.sector, 0);
 
-console.log(result);
+// console.log(result);
+
+/** Part 2 */
+let result2 = rooms
+  .map((r) => ({
+    name: r.slice(0, -11).split("-"),
+    sector: parseInt(r.slice(-11).slice(1, 4)),
+  }))
+  .map(({ name, sector }) => decrypt({ name, sector }))
+  .filter((d) => d.name.includes("north"));
+
+console.log(result2);
