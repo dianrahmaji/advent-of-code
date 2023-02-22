@@ -16,11 +16,13 @@ type State = {
   direction: Navigation;
   start: Point | null;
   end: Point;
+  steps: number;
 };
 type WirePath = {
   start: Point | null;
   end: Point;
   axis: keyof Point;
+  steps: number;
 };
 
 const wires = getLines(__dirname).map((wire) =>
@@ -44,6 +46,7 @@ const reducer = (state: State[], dir: Path, index: number) => {
         state[index].end[navigation.get(state[index].direction[dir[0]]!)!.axis],
     },
     direction: navigation.get(state[index].direction[dir[0]] as Direction)!,
+    steps: state[index].steps + dir[1],
   };
 
   state.push(newState);
@@ -59,10 +62,16 @@ function createWirePath(wire: Path[]) {
           : navigation.get("w")!,
         start: null,
         end: { x: 0, y: 0 },
+        steps: 0,
       },
     ])
     .slice(1)
-    .map(({ start, end, direction: { axis } }) => ({ start, end, axis }));
+    .map(({ start, end, direction: { axis }, steps }) => ({
+      start,
+      end,
+      axis,
+      steps,
+    }));
 }
 
 function isIntersection(val: number, ...bound: number[]): boolean {
@@ -72,19 +81,47 @@ function isIntersection(val: number, ...bound: number[]): boolean {
 }
 
 function findIntersections(wirePaths: WirePath[][]) {
-  const intersections: Point[] = [];
+  const intersections: { intersections: Point; totalSteps: number }[] = [];
 
   const [firstPath, secondPath] = wirePaths;
 
   for (const first of firstPath) {
-    const { start: firstStart, end: firstEnd, axis: firstAxis } = first;
+    const {
+      start: firstStart,
+      end: firstEnd,
+      axis: firstAxis,
+      steps: firstSteps,
+    } = first;
     for (const second of secondPath) {
-      const { start: secondStart, end: secondEnd, axis: secondAxis } = second;
+      const {
+        start: secondStart,
+        end: secondEnd,
+        axis: secondAxis,
+        steps: secondSteps,
+      } = second;
 
       if (firstAxis === secondAxis) continue;
 
       const firstIntersection = firstStart![secondAxis];
       const secondIntersection = secondStart![firstAxis];
+
+      const actualFirstSteps =
+        firstSteps -
+        Math.abs(
+          Math.abs(firstStart![firstAxis]) - Math.abs(firstEnd![firstAxis])
+        ) +
+        Math.abs(
+          Math.abs(firstStart![firstAxis]) - Math.abs(secondIntersection)
+        );
+
+      const actualsecondSteps =
+        secondSteps -
+        Math.abs(
+          Math.abs(secondStart![secondAxis]) - Math.abs(secondEnd![secondAxis])
+        ) +
+        Math.abs(
+          Math.abs(secondStart![secondAxis]) - Math.abs(firstIntersection)
+        );
 
       if (
         isIntersection(
@@ -98,10 +135,13 @@ function findIntersections(wirePaths: WirePath[][]) {
           secondEnd![secondAxis]
         )
       ) {
-        // @ts-ignore
         intersections.push({
-          [firstAxis]: firstIntersection,
-          [secondAxis]: secondIntersection,
+          // @ts-ignore
+          intersections: {
+            [firstAxis]: firstIntersection,
+            [secondAxis]: secondIntersection,
+          },
+          totalSteps: actualFirstSteps + actualsecondSteps,
         });
       }
     }
@@ -115,8 +155,14 @@ const wirePaths = wires.map((wire) => {
   return createWirePath(wire);
 });
 
-const result = findIntersections(wirePaths)
-  .map((i) => Math.abs(i.x) + Math.abs(i.y))
-  .sort((a, b) => a - b);
+const intersections = findIntersections(wirePaths).map((i) => ({
+  distance: Math.abs(i.intersections.x) + Math.abs(i.intersections.y),
+  steps: i.totalSteps,
+}));
 
+let result = intersections.sort((a, b) => a.distance - b.distance);
+console.log(result);
+
+/** Part 2 */
+result = intersections.sort((a, b) => a.steps - b.steps);
 console.log(result);
