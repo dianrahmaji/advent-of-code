@@ -52,6 +52,25 @@ function findFirstWin(moves: number[], boards: (number | boolean)[][][]) {
   }
 }
 
+function findLastWin(moves: number[], boards: (number | boolean)[][][]) {
+  for (const move of moves) {
+    for (let i = 0; i < boards.length; i++) {
+      for (let row = 0; row < boards[i].length; row++) {
+        for (let col = 0; col < boards[i][row].length; col++) {
+          if (boards[i][row][col] === move) boards[i][row][col] = false;
+        }
+      }
+
+      if (isBingo(boards[i])) {
+        if (boards.length === 1) return { move, grid: boards[i] };
+
+        boards.splice(i, 1);
+        i--;
+      }
+    }
+  }
+}
+
 function calculateResult(grid: (number | boolean)[][], move: number) {
   return (
     (grid
@@ -66,6 +85,11 @@ function calculateResult(grid: (number | boolean)[][], move: number) {
 }
 
 /** Part 1 */
-const win = findFirstWin(moves, grids);
-const result = calculateResult(win!.grid, win!.move);
+let win = findFirstWin(moves, grids);
+let result = calculateResult(win!.grid, win!.move);
+console.log(result);
+
+/** Part 2 */
+win = findLastWin(moves, grids);
+result = calculateResult(win!.grid, win!.move);
 console.log(result);
