@@ -52,16 +52,20 @@ function play(moves: number[], grids: (number | boolean)[][][]) {
   }
 }
 
+function calculateResult(grid: (number | boolean)[][], move: number) {
+  return (
+    (win?.grid
+      ?.map((r) =>
+        // @ts-ignore
+        r.filter((v) => v !== false).reduce((acc, cur) => acc + cur, 0)
+      )
+      // @ts-ignore
+
+      .reduce((acc, cur) => acc + cur, 0) as number) * win!.move
+  );
+}
+
 /** Part 1 */
 const win = play(moves, grids);
-const result =
-  (win?.grid
-    ?.map((r) =>
-      // @ts-ignore
-      r.filter((v) => v !== false).reduce((acc, cur) => acc + cur, 0)
-    )
-    // @ts-ignore
-
-    .reduce((acc, cur) => acc + cur, 0) as number) * win!.move;
-
+const result = calculateResult(win!.grid, win!.move);
 console.log(result);
