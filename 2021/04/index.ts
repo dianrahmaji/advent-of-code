@@ -36,7 +36,7 @@ function isBingo(grid: (number | boolean)[][]): boolean {
   return false;
 }
 
-function play(moves: number[], boards: (number | boolean)[][][]) {
+function findFirstWin(moves: number[], boards: (number | boolean)[][][]) {
   for (const move of moves) {
     for (const grid of boards) {
       for (let row = 0; row < grid.length; row++) {
@@ -66,6 +66,6 @@ function calculateResult(grid: (number | boolean)[][], move: number) {
 }
 
 /** Part 1 */
-const win = play(moves, grids);
+const win = findFirstWin(moves, grids);
 const result = calculateResult(win!.grid, win!.move);
 console.log(result);
