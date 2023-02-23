@@ -36,9 +36,9 @@ function isBingo(grid: (number | boolean)[][]): boolean {
   return false;
 }
 
-function play(moves: number[], grids: (number | boolean)[][][]) {
+function play(moves: number[], boards: (number | boolean)[][][]) {
   for (const move of moves) {
-    for (const grid of grids) {
+    for (const grid of boards) {
       for (let row = 0; row < grid.length; row++) {
         for (let col = 0; col < grid[row].length; col++) {
           if (grid[row][col] === move) grid[row][col] = false;
@@ -54,14 +54,14 @@ function play(moves: number[], grids: (number | boolean)[][][]) {
 
 function calculateResult(grid: (number | boolean)[][], move: number) {
   return (
-    (win?.grid
+    (grid
       ?.map((r) =>
         // @ts-ignore
         r.filter((v) => v !== false).reduce((acc, cur) => acc + cur, 0)
       )
       // @ts-ignore
 
-      .reduce((acc, cur) => acc + cur, 0) as number) * win!.move
+      .reduce((acc, cur) => acc + cur, 0) as number) * move
   );
 }
 
