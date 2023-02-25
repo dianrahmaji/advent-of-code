@@ -50,7 +50,7 @@ function drawIds(fabric: string[][], claims: Claim[]) {
   return fabric;
 }
 
-function findNoOverlap(fabric: string[][], claims: Claim[]) {
+function calculate(fabric: string[][], claims: Claim[]) {
   let set = new Set();
   const ids = claims.map(({ id }) => parseInt(id.split("#")[1]));
 
@@ -69,22 +69,22 @@ function findNoOverlap(fabric: string[][], claims: Claim[]) {
 
   const overlapIds = [...set];
 
-  return ids.filter((v) => !overlapIds.includes(v));
+  const area = overlaps
+    .map((row) => row.length)
+    .reduce((acc, cur) => acc + cur, 0);
+
+  const id = ids.filter((v) => !overlapIds.includes(v))[0];
+
+  return { area, id };
 }
 
 const claims = parseLines(__dirname, parseClaim);
 const { width, height } = findAreaDimension(claims);
 
 /** Part 1 */
-// const fabric = createGrid(height + 1, width + 1, 0);
-// drawClaims(fabric, claims);
-
-// const result = calculateOverlap(fabric);
-// console.log(result);
-
 /** Part 2 */
-const fabric2 = createGrid(height + 1, width + 1, "");
-const ids = drawIds(fabric2, claims);
+const fabric = createGrid(height + 1, width + 1, "");
+const ids = drawIds(fabric, claims);
 
-const result2 = findNoOverlap(ids, claims);
-console.log(result2);
+const result = calculate(ids, claims);
+console.log(result);
