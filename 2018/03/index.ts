@@ -38,16 +38,6 @@ function findAreaDimension(claims: Claim[]): Dimension {
   );
 }
 
-function drawClaims(fabric: number[][], claims: Claim[]) {
-  for (const { start, dimension } of claims) {
-    for (let row = start.row; row < start.row + dimension.height; row++) {
-      for (let col = start.col; col < start.col + dimension.width; col++) {
-        fabric[row][col] += 1;
-      }
-    }
-  }
-}
-
 function drawIds(fabric: string[][], claims: Claim[]) {
   for (const { id, start, dimension } of claims) {
     for (let row = start.row; row < start.row + dimension.height; row++) {
@@ -58,12 +48,6 @@ function drawIds(fabric: string[][], claims: Claim[]) {
   }
 
   return fabric;
-}
-
-function calculateOverlap(fabric: number[][]): number {
-  return fabric
-    .map((row) => row.filter((v) => v > 1).length)
-    .reduce((acc, cur) => acc + cur, 0);
 }
 
 function findNoOverlap(fabric: string[][], claims: Claim[]) {
