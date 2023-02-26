@@ -24,3 +24,7 @@ export function createGrid<T>(row: number, col: number, initial: T): T[][] {
 export function binarytoDecimal(binary: string): number {
   return [...binary].reduce((acc, cur) => acc * 2 + parseInt(cur), 0);
 }
+
+export function range(size: number, startAt = 0) {
+  return [...Array(size).keys()].map((i) => i + startAt);
+}
