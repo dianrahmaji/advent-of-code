@@ -43,8 +43,7 @@ let result = passwords
 
 console.log(result);
 
-// /** Part 2 */
-
+/** Part 2 */
 let result2 = passwords
   .filter((p) => isNeverDecrease(p.toString()))
   .filter((p) => hasDuobleLargestAdjacent(p.toString())).length;

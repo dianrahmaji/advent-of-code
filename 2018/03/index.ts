@@ -78,11 +78,10 @@ function calculate(fabric: string[][], claims: Claim[]) {
   return { area, id };
 }
 
-const claims = parseLines(__dirname, parseClaim);
-const { width, height } = findAreaDimension(claims);
-
 /** Part 1 */
 /** Part 2 */
+const claims = parseLines(__dirname, parseClaim);
+const { width, height } = findAreaDimension(claims);
 const fabric = createGrid(height + 1, width + 1, "");
 const ids = drawIds(fabric, claims);
 
