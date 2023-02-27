@@ -2,10 +2,10 @@ import { getInput } from "../../utils";
 
 const passports = getInput(__dirname)
   .split("\n\n")
-  .map((passport) => passport.split("\n").map((line) => line.split(" ")))
   .map((passport) =>
     passport
-      .reduce((acc, cur) => [...acc, ...cur], [])
+      .split("\n")
+      .flatMap((line) => line.split(" "))
       .map((entry) => entry.split(":"))
   )
   .map((passport) => Object.fromEntries(passport));
