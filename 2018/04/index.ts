@@ -81,8 +81,13 @@ function calculate(guard: {
 }
 
 /** Part 1 */
-const mostSleep = createSleepRecord(records).sort(
-  (a, b) => b.total - a.total
+let mostSleep = createSleepRecord(records).sort((a, b) => b.total - a.total)[0];
+let result = calculate(mostSleep);
+console.log(result);
+
+/** Part 2 */
+mostSleep = createSleepRecord(records).sort(
+  (a, b) => b.record.length - a.record.length
 )[0];
-const result = calculate(mostSleep);
+result = calculate(mostSleep);
 console.log(result);
