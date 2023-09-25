@@ -1,12 +1,17 @@
-const instructionMap = new Map([['(', 1], [')', -1]])
+enum DirectionOption {
+	Up = "(",
+	Down = ")",
+}
 
 export function partOne(input: string) {
-  return input.split('').reduce((currentFloor, instruction) => {
-    const direction = instructionMap.get(instruction);
-
-    if (!direction) return currentFloor;
-
-    const newFloor = currentFloor + direction;
-    return newFloor;
-  }, 0)
+	return input.split("").reduce((currentFloor, instruction) => {
+		switch (instruction) {
+			case DirectionOption.Up:
+				return ++currentFloor;
+			case DirectionOption.Down:
+				return --currentFloor;
+			default:
+				return currentFloor;
+		}
+	}, 0);
 }
