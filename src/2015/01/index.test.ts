@@ -6,9 +6,9 @@ import { partOne } from '.'
 
 describe('2015 day 01', () => {
   describe('sample', () => {
-    const input = readFileSync(join(import.meta.dir, 'sample.txt'), 'utf-8')
-    it('part 1', () => {
-      expect(partOne(input)).toBe(-3)
+    const sample = JSON.parse(readFileSync(join(import.meta.dir, 'sample.json'), 'utf-8')) as [string,number][]
+    it.each(sample)('has direction %s and goes to floor %i', (direction, expected) => {
+      expect(partOne(direction)).toBe(expected);
     })
   })
 })
